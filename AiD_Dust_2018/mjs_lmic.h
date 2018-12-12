@@ -21,7 +21,7 @@
 #define EEPROM_APP_KEY_LEN 16
 
 // Try transmission for up to 60 seconds (this includes joining)
-const uint32_t TX_TIMEOUT = 60000;
+const uint32_t TX_TIMEOUT = 60000; 
 //const uint32_t TX_TIMEOUT = 120000;
 
 #include <lmic.h>
