@@ -28,13 +28,11 @@
 #define txPin  A2
 
 // setup timing variables
-//uint32_t const UPDATE_INTERVAL = 60000; // 60s*1000ms = 1m interval 900000;    /// Interval im mS, 900000 ~ 15 minutes
-uint32_t const UPDATE_INTERVAL = 1900000; // For testing AiD 900000 => ~30 seconds interval
+uint32_t const UPDATE_INTERVAL = 2200000; // Approx 1 measurement per minute. (for testing AiD 900000 => ~30 seconds interval)
 
 uint32_t lastUpdateTime = 0;
 
 // set run mode
-//boolean const DEBUG = false;
 #define DEBUG true
 
 #include "mjs_lmic.h"
@@ -66,9 +64,8 @@ unsigned char AiD_add_float (unsigned char idx_in, unsigned char type, float val
 void setup() 
 {
   // when in debugging mode start serial connection
-
-    Serial.begin(115200);
-    Serial.println(F("Start"));
+  Serial.begin(115200);
+  Serial.println(F("Start"));
 
   // Setup LoRaWAN transceiver
   mjs_lmic_setup();
@@ -122,16 +119,16 @@ void loop()
   
   // tell the world that we will go to sleep and how long.
 
-    Serial.print(F("Sleeping: "));
-    Serial.print(sleepDuration);
-    Serial.println(F(" ms..."));
-    Serial.flush();
+  Serial.print(F("Sleeping: "));
+  Serial.print(sleepDuration);
+  Serial.println(F(" ms..."));
+  Serial.flush();
 
   // Goto sleep.
   doSleep(sleepDuration);
   
   // tell the world that we woke-up.
-    Serial.println(F("Woke up."));
+  Serial.println(F("Woke up."));
 }
 
 void doSleep(uint32_t time) 
@@ -191,12 +188,8 @@ void queueData()
    
   // Prepare upstream data transmission at the next possible time.
   LMIC_setTxData2(1, &mydata[0], mydata_size, 0);
+  Serial.println(F("Packet queued"));
 
-  #if DEBUG == true
-  {
-    Serial.println(F("Packet queued"));
-  }
-  #endif
 }
 
 /// \brief read temperature from sensor 
@@ -278,7 +271,7 @@ unsigned char AiD_add_float (unsigned char idx_in, unsigned char type, float val
    mydata[idx_in++] = (convert.a_uint>>16) & 0xFF;
    mydata[idx_in++] = (convert.a_uint>>8) & 0xFF;
    mydata[idx_in++] = (convert.a_uint>>0) & 0xFF;
-  return (idx_in);
+   return (idx_in);
  }
 
 

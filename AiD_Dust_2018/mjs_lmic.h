@@ -21,37 +21,13 @@
 #define EEPROM_APP_KEY_LEN 16
 
 // Try transmission for up to 60 seconds (this includes joining)
-//const uint32_t TX_TIMEOUT = 60000;
-const uint32_t TX_TIMEOUT = 120000;
+const uint32_t TX_TIMEOUT = 60000;
+//const uint32_t TX_TIMEOUT = 120000;
 
 #include <lmic.h>
 #include <hal/hal.h>
 #include <SPI.h>
 #include <avr/eeprom.h>
-
-
-
-#define USE_HARD_OTAA_KEYS 0
-#if USE_HARD_OTAA_KEYS == 1
-
-// This EUI must be in little-endian format, so least-significant-byte
-// first (LSB..MSB). When copying an EUI from ttnctl output, this means to reverse
-// the bytes. For TTN issued EUIs the last bytes should be 0xD5, 0xB3, 0x70.
-// The same for all Dust-sensor-nodes
-  static const u1_t PROGMEM APPEUI[8] =  { 0xA3, 0x42, 0x01, 0xD0, 0x7E, 0xD5, 0xB3, 0x70 }; // AID Dust Sensors 2018
-
-// This should also be in little endian format, see above (LSB..MSB)
-  static const u1_t PROGMEM DEVEUI[8] = { 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };; // AID Dust Sensors 2018                  
-
-// This key should be in big endian format (or, since it is not really a number but a block of memory, endianness does not really apply). In
-// practice, a key taken from ttnctl can be copied as-is (MSB..LSB).
-  static const u1_t PROGMEM APPKEY[16] =  { 0x89, 0x61, 0xC3, 0x49, 0x7C, 0x82, 0x50, 0x06, 0x71, 0xE0, 0xA3, 0x84, 0x30, 0x88, 0xAA, 0x96 }; // AID Dust Sensors 2018
-
-  void os_getArtEui (u1_t* buf) { memcpy_P(buf, APPEUI, 8);}
-  void os_getDevEui (u1_t* buf) { memcpy_P(buf, DEVEUI, 8);}
-  void os_getDevKey (u1_t* buf) { memcpy_P(buf, APPKEY, 16); }
-
-#else
 
 // Get OTAA keys from eeprom
 void os_getArtEui (uint8_t* buf) {
@@ -71,7 +47,6 @@ void os_getDevKey (uint8_t* buf) {
     buf[i] = eeprom_read_byte((uint8_t*)EEPROM_APP_KEY_START + i);
   }
 }
-#endif
 
 const lmic_pinmap lmic_pins = {
   .nss = 10,
@@ -227,7 +202,6 @@ void mjs_lmic_setup() {
   // Let LMIC compensate for +/- 2% clock error
    LMIC_setClockError(MAX_CLOCK_ERROR * 2 / 100);
 
-  //LMIC_setClockError(MAX_CLOCK_ERROR * 50 / 100); // FOR TEST
 }
 
 void mjs_lmic_wait_for_txcomplete() {
