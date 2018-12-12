@@ -28,7 +28,7 @@
 #define txPin  A2
 
 // setup timing variables
-uint32_t const UPDATE_INTERVAL = 2200000; // Approx 1 measurement per minute. (for testing AiD 900000 => ~30 seconds interval)
+uint32_t const UPDATE_INTERVAL = 2180000; // Approx 1 measurement per minute. (for testing AiD 900000 => ~30 seconds interval)
 
 uint32_t lastUpdateTime = 0;
 
@@ -269,8 +269,8 @@ unsigned char AiD_add_float (unsigned char idx_in, unsigned char type, float val
    // mydata[idx_in++] = type;
    mydata[idx_in++] = (convert.a_uint>>24) & 0xFF;
    mydata[idx_in++] = (convert.a_uint>>16) & 0xFF;
-   mydata[idx_in++] = (convert.a_uint>>8) & 0xFF;
-   mydata[idx_in++] = (convert.a_uint>>0) & 0xFF;
+   mydata[idx_in++] = (convert.a_uint>>8 ) & 0xFF;
+   mydata[idx_in++] = (convert.a_uint>>0 ) & 0xFF;
    return (idx_in);
  }
 
